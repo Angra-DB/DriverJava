@@ -10,35 +10,56 @@ public class Driver {
 
 	private Socket client;
 	private String host;
-	private short port;
+	private int port;
 
-	public Driver(String host, short port) throws Exception {
+	public Driver(String host, int port) throws Exception {
 		this.host = host;
 		this.port = port;
-		connect();
 	}
-
+	
+	/**
+     * Creates a database and get a response.
+     *
+     * @param Name of database.
+     */
 	public void createDatabase(String dbName) throws IOException {
-		if (client == null){
-			System.out.println("No DB connection");
-		}
 		PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 		InputStreamReader in = new InputStreamReader(client.getInputStream());
 		BufferedReader reader = new BufferedReader(in);
 
 		out.println("create_db " + dbName);
-		System.out.println(reader.readLine());
-
-	}
-
-	private void connect() throws Exception {
-		System.out.print("Trying to connect to " + host + "....");
-
-		client = new Socket(host, port);
-		System.out.println(" Connected to " + host + ":" + port + " .");
+		
+		if(reader.readLine().equals("{ok}")){
+			System.out.println("Database " + dbName + " created with success");
+		}
+		else{
+			System.out.println("Could not create the database " + dbName);
+		}
 	}
 	
-	public void connectToDataBase(String dbName) throws IOException {
+	/**
+     * Get a tcp connection with angraDb.
+     *
+     */
+	public void getTcpConnection() throws Exception {
+		System.out.println("Trying to connect to " + host + "....");
+		
+		try{
+			client = new Socket(host, port);
+		}catch(Exception e){
+			System.out.println("Could not create a tcp connection!");
+			throw new Exception();
+		}
+		
+		System.out.println("Connected to " + host + ":" + port + " .");
+	}
+	
+	/**
+     * Connect with a specific database.
+     *
+     * @param Name of database to connect with.
+     */
+	public void connectToDatabase(String dbName) throws IOException {
 		PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 		InputStreamReader in = new InputStreamReader(client.getInputStream());
 		BufferedReader reader = new BufferedReader(in);
@@ -63,11 +84,11 @@ public class Driver {
 		this.host = host;
 	}
 
-	public short getPort() {
+	public int getPort() {
 		return port;
 	}
 
-	public void setPort(short port) {
+	public void setPort(int port) {
 		this.port = port;
 	}
 
