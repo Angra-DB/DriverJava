@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Driver {
+
+	private static final Logger LOGGER = Logger.getLogger(Driver.class.getName());
 
 	private Socket client;
 	private String host;
@@ -16,56 +20,56 @@ public class Driver {
 		this.host = host;
 		this.port = port;
 	}
-	
+
 	/**
-     * Creates a database and get a response.
-     *
-     * @param Name of database.
-     */
+	 * Creates a database and get a response.
+	 *
+	 * @param Name
+	 *            of database.
+	 */
 	public void createDatabase(String dbName) throws IOException {
 		PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 		InputStreamReader in = new InputStreamReader(client.getInputStream());
 		BufferedReader reader = new BufferedReader(in);
 
 		out.println("create_db " + dbName);
-		
-		if(reader.readLine().equals("{ok}")){
-			System.out.println("Database " + dbName + " created with success");
-		}
-		else{
-			System.out.println("Could not create the database " + dbName);
+
+		if (reader.readLine().equals("{ok}")) {
+			LOGGER.log(Level.INFO, "\nDatabase " + dbName + " created with success.\n");
+		} else {
+			LOGGER.log(Level.SEVERE, "\nCould not create the database!\n" + dbName);
 		}
 	}
-	
+
 	/**
-     * Get a tcp connection with angraDb.
-     *
-     */
+	 * Get a TCP connection with angraDb.
+	 *
+	 */
 	public void getTcpConnection() throws Exception {
-		System.out.println("Trying to connect to " + host + "....");
-		
-		try{
+		LOGGER.log(Level.INFO, "\nTrying to connect to " + host + ":" + port + "....\n");
+
+		try {
 			client = new Socket(host, port);
-		}catch(Exception e){
-			System.out.println("Could not create a tcp connection!");
+		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "\nCould not create a TCP connection due to the following exception:\n", e);
 			throw new Exception();
 		}
-		
-		System.out.println("Connected to " + host + ":" + port + " .");
+		LOGGER.log(Level.INFO, "\nConnected to " + host + ":" + port + ".\n");
 	}
-	
+
 	/**
-     * Connect with a specific database.
-     *
-     * @param Name of database to connect with.
-     */
+	 * Connect with a specific database.
+	 *
+	 * @param Name
+	 *            of database to connect with.
+	 */
 	public void connectToDatabase(String dbName) throws IOException {
 		PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 		InputStreamReader in = new InputStreamReader(client.getInputStream());
 		BufferedReader reader = new BufferedReader(in);
 
 		out.println("connect " + dbName);
-		System.out.println(reader.readLine());		
+		LOGGER.log(Level.INFO, "\n" + reader.readLine() + "\n");
 	}
 
 	public Socket getClient() {

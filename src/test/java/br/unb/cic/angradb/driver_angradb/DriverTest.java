@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.unb.cic.angradb.driverAngradb.Driver;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class DriverTest {
 	
