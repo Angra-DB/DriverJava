@@ -72,6 +72,50 @@ public class Driver {
 		LOGGER.log(Level.INFO, "\n" + reader.readLine() + "\n");
 	}
 
+	public String save(String document) throws IOException {
+		PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+		InputStreamReader in = new InputStreamReader(client.getInputStream());
+		BufferedReader reader = new BufferedReader(in);
+
+		out.println("save " + document);
+
+		String key = reader.readLine();
+
+		LOGGER.log(Level.INFO, "\n" + key + "\n");
+		return key.replaceAll("\"", "");
+	}
+
+	public void lookup(String key) throws IOException {
+		PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+		InputStreamReader in = new InputStreamReader(client.getInputStream());
+		BufferedReader reader = new BufferedReader(in);
+
+		out.println("lookup " + key);
+
+		LOGGER.log(Level.INFO, "\n" + reader.readLine() + "\n");
+	}
+
+	public String update(String key, String newDocument) throws IOException {
+		PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+		InputStreamReader in = new InputStreamReader(client.getInputStream());
+		BufferedReader reader = new BufferedReader(in);
+
+		out.println("update " + key + " " + newDocument);
+
+		LOGGER.log(Level.INFO, "\n" + reader.readLine() + "\n");
+		return key;
+	}
+
+	public void delete(String key) throws IOException {
+		PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+		InputStreamReader in = new InputStreamReader(client.getInputStream());
+		BufferedReader reader = new BufferedReader(in);
+
+		out.println("delete " + key);
+
+		LOGGER.log(Level.INFO, "\n" + reader.readLine() + "\n");
+	}
+
 	public Socket getClient() {
 		return client;
 	}
